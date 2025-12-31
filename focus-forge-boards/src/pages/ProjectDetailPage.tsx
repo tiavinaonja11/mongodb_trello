@@ -10,6 +10,7 @@ import { PROJECT_STATUS_LABELS, ProjectStatus } from '@/types';
 import { cn } from '@/lib/utils';
 import { NewTicketModal } from '@/components/tickets/NewTicketModal';
 import { InviteToProjectModal } from '@/components/projects/InviteToProjectModal';
+import { MembersListModal } from '@/components/projects/MembersListModal';
 import { useProjects } from '@/hooks/use-projects';
 import { useTickets } from '@/hooks/use-tickets';
 
@@ -24,6 +25,7 @@ const ProjectDetailPage = () => {
   const navigate = useNavigate();
   const [isNewTicketOpen, setIsNewTicketOpen] = useState(false);
   const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [isMembersListOpen, setIsMembersListOpen] = useState(false);
   const { projects, isLoading: projectsLoading, fetchProjects } = useProjects();
   const { tickets, isLoading: ticketsLoading, fetchTickets } = useTickets(id || '');
 
@@ -103,11 +105,15 @@ const ProjectDetailPage = () => {
           <div className="flex items-center gap-3">
             {/* Members */}
             <div className="flex items-center gap-2">
-              <div className="flex -space-x-2">
+              <button
+                className="flex -space-x-2 hover:opacity-75 transition-opacity rounded-lg p-1"
+                onClick={() => setIsMembersListOpen(true)}
+                title="Voir tous les membres"
+              >
                 {getProjectMembers().slice(0, 4).map((member) => (
                   <div
                     key={member.id}
-                    className="w-9 h-9 rounded-full bg-secondary border-2 border-background flex items-center justify-center"
+                    className="w-9 h-9 rounded-full bg-secondary border-2 border-background flex items-center justify-center cursor-pointer hover:ring-2 hover:ring-primary transition-all"
                     title={member.fullName}
                   >
                     <span className="text-xs font-medium">
@@ -115,7 +121,7 @@ const ProjectDetailPage = () => {
                     </span>
                   </div>
                 ))}
-              </div>
+              </button>
               <Button
                 variant="outline"
                 size="icon"
@@ -182,6 +188,13 @@ const ProjectDetailPage = () => {
         projectId={id || ''}
         projectName={project?.name || ''}
         onInviteSent={handleInviteSent}
+      />
+
+      <MembersListModal
+        open={isMembersListOpen}
+        onOpenChange={setIsMembersListOpen}
+        members={getProjectMembers()}
+        projectName={project?.name || ''}
       />
     </MainLayout>
   );

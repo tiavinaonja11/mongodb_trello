@@ -173,6 +173,41 @@
   .animate-scale-in {
     animation: scaleIn 0.2s ease-out;
   }
+
+  .stats-card {
+    @apply bg-card border border-border/50 rounded-xl shadow-[var(--shadow-card)]
+           transition-all duration-300 hover:shadow-[var(--shadow-card-hover)]
+           hover:border-primary/50;
+  }
+
+  .dashboard-section {
+    @apply space-y-4;
+  }
+
+  .dashboard-section-title {
+    @apply text-2xl font-bold text-foreground;
+  }
+
+  .dashboard-section-subtitle {
+    @apply text-sm text-muted-foreground;
+  }
+
+  .empty-state {
+    @apply flex flex-col items-center justify-center py-12 rounded-lg
+           border-2 border-dashed border-border bg-card/50;
+  }
+
+  .empty-state-icon {
+    @apply w-12 h-12 text-muted-foreground/50 mb-3;
+  }
+
+  .empty-state-title {
+    @apply text-muted-foreground font-medium mb-2;
+  }
+
+  .empty-state-action {
+    @apply text-sm text-primary hover:underline transition-colors duration-200;
+  }
 }
 
 @keyframes fadeIn {

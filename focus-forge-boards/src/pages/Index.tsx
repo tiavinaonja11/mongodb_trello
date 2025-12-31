@@ -103,92 +103,123 @@ const Index = () => {
   return (
     <MainLayout>
       <div className="space-y-8 animate-fade-in">
-        {/* Page Title */}
-        <div className="mb-6">
-          <h1 className="text-4xl font-bold text-foreground mb-1">
-            Collab Task
-          </h1>
-          <p className="text-muted-foreground">
-            Gérez vos projets et collaborez avec votre équipe
-          </p>
+        {/* Header Section */}
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
+              Collab Task
+            </h1>
+            <p className="text-muted-foreground text-lg">
+              Gérez vos projets et collaborez avec votre équipe
+            </p>
+          </div>
+
+          {/* Greeting */}
+          <div className="pt-4 pl-1 border-l-4 border-primary/50">
+            <h2 className="text-2xl font-semibold text-foreground">
+              Bonjour, <span className="text-primary">{user?.fullName.split(' ')[0]}</span> 👋
+            </h2>
+            <p className="text-muted-foreground text-sm mt-1">
+              Voici un aperçu de vos projets et tâches en temps réel.
+            </p>
+          </div>
         </div>
 
-        {/* Header */}
-        <div>
-          <h2 className="text-2xl font-semibold text-foreground mb-2">
-            Bonjour, {user?.fullName.split(' ')[0]} 👋
-          </h2>
-          <p className="text-muted-foreground">
-            Voici un aperçu de vos projets et tâches.
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatsCard
-            title="Projets actifs"
-            value={stats.projects}
-            icon={FolderKanban}
-            trend={{ value: 12, positive: true }}
-          />
-          <StatsCard
-            title="Tâches terminées"
-            value={stats.completedTickets}
-            icon={CheckCircle2}
-            trend={{ value: 8, positive: true }}
-          />
-          <StatsCard
-            title="En cours"
-            value={stats.inProgressTickets}
-            icon={Clock}
-          />
-          <StatsCard
-            title="Membres d'équipe"
-            value={stats.totalMembers}
-            icon={Users}
-          />
+        {/* Stats Section */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Vue d'ensemble</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatsCard
+              title="Projets actifs"
+              value={stats.projects}
+              icon={FolderKanban}
+              trend={{ value: 12, positive: true }}
+            />
+            <StatsCard
+              title="Tâches terminées"
+              value={stats.completedTickets}
+              icon={CheckCircle2}
+              trend={{ value: 8, positive: true }}
+            />
+            <StatsCard
+              title="En cours"
+              value={stats.inProgressTickets}
+              icon={Clock}
+            />
+            <StatsCard
+              title="Membres d'équipe"
+              value={stats.totalMembers}
+              icon={Users}
+            />
+          </div>
         </div>
 
         {/* Projects Section */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-foreground">Projets</h2>
-            <a href="/projects" className="text-sm text-primary hover:underline">
-              Voir tout
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-bold text-foreground">Projets</h2>
+              <p className="text-sm text-muted-foreground">{displayedProjects.length} projet{displayedProjects.length !== 1 ? 's' : ''} actif{displayedProjects.length !== 1 ? 's' : ''}</p>
+            </div>
+            <a href="/projects" className="text-sm font-medium text-primary hover:text-primary/80 hover:underline transition-colors duration-200">
+              Voir tous les projets →
             </a>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {displayedProjects.map((project, index) => (
-              <div
-                key={project.id}
-                className="animate-slide-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <ProjectCard project={project} onProjectUpdated={() => {}} />
-              </div>
-            ))}
-          </div>
+
+          {displayedProjects.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {displayedProjects.map((project, index) => (
+                <div
+                  key={project.id}
+                  className="animate-slide-up"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ProjectCard project={project} onProjectUpdated={() => {}} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 rounded-lg border-2 border-dashed border-border bg-card/50">
+              <FolderKanban className="w-12 h-12 text-muted-foreground/50 mb-3" />
+              <p className="text-muted-foreground font-medium mb-2">Aucun projet pour le moment</p>
+              <a href="/projects/new" className="text-sm text-primary hover:underline">
+                Créer votre premier projet
+              </a>
+            </div>
+          )}
         </section>
 
-        {/* Recent Tickets */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold text-foreground">Tâches récentes</h2>
+        {/* Recent Tickets Section */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-bold text-foreground">Tâches récentes</h2>
+              <p className="text-sm text-muted-foreground">{recentTickets.length} tâche{recentTickets.length !== 1 ? 's' : ''} affichée{recentTickets.length !== 1 ? 's' : ''}</p>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {recentTickets.map((ticket, index) => (
-              <div
-                key={ticket.id || `ticket-${index}`}
-                className="animate-slide-up"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <TicketCard
-                  ticket={ticket}
-                  onClick={() => navigate(`/projects/${ticket.projectId}`)}
-                />
-              </div>
-            ))}
-          </div>
+
+          {recentTickets.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {recentTickets.map((ticket, index) => (
+                <div
+                  key={ticket.id || `ticket-${index}`}
+                  className="animate-slide-up"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <TicketCard
+                    ticket={ticket}
+                    onClick={() => navigate(`/projects/${ticket.projectId}`)}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 rounded-lg border-2 border-dashed border-border bg-card/50">
+              <Clock className="w-12 h-12 text-muted-foreground/50 mb-3" />
+              <p className="text-muted-foreground font-medium mb-2">Aucune tâche pour le moment</p>
+              <p className="text-xs text-muted-foreground">Créez un projet pour commencer à créer des tâches</p>
+            </div>
+          )}
         </section>
       </div>
     </MainLayout>
